@@ -1,5 +1,7 @@
 #  cpp17learning-2023
 c++17从入门到精通<br>
+作者：董洪伟
+[hwdong](https://github.com/hwdong-net/cplusplus17)
 # 这是大一下学期的cpp各个章节的练习题<br>
 1. c++介绍
 2. 变量和类型
