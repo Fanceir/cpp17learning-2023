@@ -1,0 +1,208 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+using namespace std;
+//先实现一个线性表，在此基础上实现一个图书管理程序
+
+//线性表的实现
+class Book{
+    public:
+        string name;
+        string author;
+        string ISBN;
+        string publisher;
+        string date;
+        double price;
+};
+using ElemType = Book;
+class Vector
+{
+    ElemType* data{nullptr};
+    int n{0};//当前元素个数
+    int capacity{0};//容量
+public:
+   Vector(const int cap = 10)   //创建容量是cap的一个线性表
+		:capacity{ cap }, data{ new ElemType[cap] }	{}
+    bool insert(const int i,const ElemType& e);
+    bool erase(const int i);
+    bool push_back(const ElemType& e);
+    bool pop_back();
+    bool get(const int i, ElemType& e)const;
+    bool set(const int i, const ElemType e);
+    int size()const
+    {
+        return n;
+    }
+    private:
+    bool add_capacity();
+};
+bool Vector::insert(const int i,const ElemType& e)
+{
+    if(i<0||i>n)
+    {
+        cout<<"插入位置不合法"<<endl;
+        return false;
+    }
+    if(n==capacity)
+    {
+        if(!add_capacity())
+        {
+            cout<<"增加容量失败"<<endl;
+            return false;
+        }
+    }
+    for(int j=n;j>i;j--)
+    {
+        data[j]=data[j-1];
+    }
+    data[i]=e;
+    n++;
+    return true;
+}
+bool Vector::add_capacity(){
+    capacity*=2;
+    ElemType* new_data=new ElemType[capacity];
+    if(new_data==nullptr)
+    {
+        cout<<"增加容量失败"<<endl;
+        return false;
+    }
+    for(int i=0;i<n;i++)
+    {
+        new_data[i]=data[i];
+    }
+    delete[] data;
+    data=new_data;
+    return true;
+}
+bool Vector::erase(const int i)
+{
+    if(i<0||i>=n)
+    {
+        cout<<"删除位置不合法"<<endl;
+        return false;
+    }
+    for(int j=i;j<n-1;j++)
+    {
+        data[j]=data[j+1];
+    }
+    n--;
+    return true;
+}
+bool Vector::push_back(const ElemType& e)
+{
+    if (n == capacity && !add_capacity())    //空间满就扩容
+		return false;
+	data[n] = e;
+	n++;
+	//data[n++] = e;                      //e放入下标n位置，然后n++
+	return true;
+}
+bool Vector::pop_back()
+{
+    if (n == 0) return false;          //空表
+	n--;                         //n减去1就相当于删除了表尾元素
+	return true;
+}
+bool Vector::get(const int i, ElemType& e)const
+{
+    if(i<0||i>=n)
+    {
+        cout<<"获取位置不合法"<<endl;
+        return false;
+    }
+    e=data[i];
+    return true;
+}
+bool Vector::set(const int i, const ElemType e)
+{
+    if(i<0||i>=n)
+    {
+        cout<<"设置位置不合法"<<endl;
+        return false;
+    }
+    data[i]=e;
+    return true;
+}
+//图书管理程序的实现
+void input (ElemType &e)//输入图书信息
+{
+    cout<<"请输入书名：";
+    cin>>e.name;
+    cout<<"请输入作者：";
+    cin>>e.author;
+    cout<<"请输入ISBN：";
+    cin>>e.ISBN;
+    cout<<"请输入出版社：";
+    cin>>e.publisher;
+    cout<<"请输入出版日期：";
+    cin>>e.date;
+    cout<<"请输入价格：";
+    cin>>e.price;
+}
+void print(const ElemType &e)//输出图书信息
+{
+    cout<<"书名："<<e.name<<endl;
+    cout<<"作者："<<e.author<<endl;
+    cout<<"ISBN："<<e.ISBN<<endl;
+    cout<<"出版社："<<e.publisher<<endl;
+    cout<<"出版日期："<<e.date<<endl;
+    cout<<"价格："<<e.price<<endl;
+}
+void print(const Vector& v) {
+	ElemType e;
+	for (auto i = 0; i != v.size(); i++) {
+		v.get(i, e);
+		print(e);//输出该图书信息
+	}
+	std::cout << std::endl;
+}
+void search(const Vector& v)//查找图书信息
+{
+    string name;
+    cout<<"请输入要查找的书名：";
+    cin>>name;
+    ElemType e;
+    for(int i=0;i<v.size();i++)
+    {
+        v.get(i,e);
+        if(e.name==name)
+        {
+            print(e);
+            return;
+        }
+    }
+    cout<<"没有找到"<<name<<"这本书"<<endl;
+}
+int main(){
+    Vector v;
+    ElemType e;
+    int choice;
+    while(1)
+    {
+        cout<<"1.录入图书信息"<<endl;
+        cout<<"2.输出图书信息"<<endl;
+        cout<<"3.查找图书信息"<<endl;
+        cout<<"4.退出"<<endl;
+        cout<<"请输入你的选择：";
+        cin>>choice;
+        switch(choice)
+        {
+            case 1:
+                input(e);
+                v.push_back(e);
+                break;
+            case 2:
+                print(v);
+                break;
+            case 3:
+                search(v);
+                break;
+            case 4:
+                return 0;
+            default:
+                cout<<"输入错误，请重新输入"<<endl;
+        }
+    }
+    return 0;
+}
