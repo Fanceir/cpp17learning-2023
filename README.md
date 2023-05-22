@@ -3,7 +3,7 @@ c++17从入门到精通<br>
 作者：董洪伟[cpp17](https://github.com/hwdong-net/cplusplus17)
 #  关于本书的勘误
 书p301页
-第四题的后半部分没有int main 的主函数<br
+第四题的后半部分没有int main 的主函数<br>
 而在第六题的前半部分多了一个int main的主函数 应该是中间插入第五题时出现了错误<br>
 
 # 这是大一下学期的cpp各个章节的练习题<br>
